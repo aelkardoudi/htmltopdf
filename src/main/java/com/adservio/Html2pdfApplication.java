@@ -1,11 +1,16 @@
 package com.adservio;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import com.adservio.storage.FileStorage;
+
 
 @Configuration
 @ComponentScan("com.adservio")
@@ -19,5 +24,13 @@ public class Html2pdfApplication extends WebMvcConfigurerAdapter {
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 	    registry.addViewController("/").setViewName("index");
+	}
+	
+	@Bean
+	CommandLineRunner init(FileStorage fileStorage) {
+		return (args) -> {
+			fileStorage.deleteAll();
+			fileStorage.init();
+		};
 	}
 }
